@@ -18,7 +18,7 @@ public class Main {
 		learner.trainWeightVector();
 		
 		for( int i = 0; i < learner.getWeights().length; i++ ) {
-			System.out.println("w" + i + ": -> " + learner.getWeights()[i] );
+			System.out.println("\\( w_{" + (i+1) + "} \\rightarrow " + learner.getWeights()[i] + " \\)");
 		}
 		
 		System.out.println("------------------------");
@@ -36,7 +36,7 @@ public class Main {
 		
 		final List<Double> classifications = learner.applyWeightVector(dataSet3);
 		for( int i = 0; i < classifications.size(); i++ ) {
-			System.out.println( i + " -> " + classifications.get(i) );
+			System.out.println( "\\( " + (i+1) + " \\rightarrow " + classifications.get(i) + " \\) \\\\" );
 		}
 		
 		final List<Pair<String,Double>> coefficients = CorrelationCoefficient.calculate(dataSet3, classifications);
@@ -45,19 +45,26 @@ public class Main {
 		System.out.println("------------------------");
 		String maxProp = "";
 		Double maxCorrelation = Double.MIN_VALUE;
+		System.out.println("\\( \\begin{array}{l|l}");
+		System.out.println("\\bf{Label} & \\bf{Correlation Coefficient} \\\\");
+		System.out.println("\\hline");
 		for(final Pair<String, Double> coefficient : coefficients ) {
-			System.out.println(coefficient.getLeft().trim() + " --> " + coefficient.getRight() );
+			System.out.println("\\text{ " + coefficient.getLeft().trim().replaceAll("[^A-Za-z0-9]", " ") + " } & " + coefficient.getRight() + " \\\\");
 			if( coefficient.getRight().compareTo(maxCorrelation) > 0 ) {
 				maxProp = coefficient.getLeft();
 				maxCorrelation = coefficient.getRight();
 			}
 		}
+		System.out.println("\\end{array} \\)");
+		System.out.println();
+
 		
 		System.out.println("------------------------");
 		System.out.println("Maximum Correlation Prop");
 		System.out.println("------------------------");
-		System.out.println("Label: " + maxProp);
-		System.out.println("Correlation Coefficient: " + maxCorrelation);
+		System.out.println("\\bf{ Property With Maximum Correlation} \\\\ ");
+		System.out.println("Label: " + maxProp.replaceAll("[^A-Za-z0-9]", " ") + " \\\\");
+		System.out.println("Correlation Coefficient: \\(" + maxCorrelation + "\\)");
 	}
 
 }
