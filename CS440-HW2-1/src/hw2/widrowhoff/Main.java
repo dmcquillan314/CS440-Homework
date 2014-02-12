@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Main {
 
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		final String dataSet1Csv = "DataSet1.csv";
 		final String dataSet2Csv = "DataSet2.csv";

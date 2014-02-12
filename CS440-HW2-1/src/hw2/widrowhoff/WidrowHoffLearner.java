@@ -23,34 +23,27 @@ public class WidrowHoffLearner {
 		this.x = dataSet.exData;
 		this.labels = dataSet.exLabels;
 		final int inputLength = x[0].length; // get input vector length less the value of the class
+		
 		double[] weightsVector = new double[inputLength];
 		for( int i = 0; i < inputLength; i++ ) {
 			weightsVector[i] = 0;
 		}
 		this.weights = weightsVector;
 		
-		homogeneousWeights = new double[ weights.length + 1];
-		homogeneousWeights[0] = threshold;
-		for(int k = 1; k < weights.length; k++ ) {
-			homogeneousWeights[k] = weights[k - 1];
-		}
+		homogeneousWeights = VectorUtils.concat(new double[] { threshold }, weights );
 		
 		this.threshold = threshold;
 	}
 	
 	public void trainWeightVector() {
 		int iterations = 0;
-		while( true ) {
-			int errors = 0;
+		int errors;
+		do {
+			errors = 0;
 			for( int i = 0; i < x.length; i++ ) {
-				double[] heterogeneousInputs = x[i];
-				double[] inputs = new double[heterogeneousInputs.length + 1];
-				inputs[0] = -1;
-				for(int j = 1; j < inputs.length; j++) {
-					inputs[j] = heterogeneousInputs[j-1];
-				}
+				double[] heterogeneousInputs = VectorUtils.concat(new double[] { -1.0 }, x[i]);
 				
-				double err = labels[i] - percepW( inputs ); // use last value in array as label
+				double err = labels[i] - percepW( heterogeneousInputs ); // use last value in array as label
 				
 				// 0 - correct
 				// -1 - false positive
@@ -59,17 +52,14 @@ public class WidrowHoffLearner {
 					errors++;
 //					double loss = -1.0 * err * VectorUtils.dotProduct(inputs, weights);
 					
-					final double[] scaledInputs = VectorUtils.scale(inputs, alpha * err );
+					final double[] scaledInputs = VectorUtils.scale(heterogeneousInputs, alpha * err );
 					homogeneousWeights = VectorUtils.add(scaledInputs, homogeneousWeights);
 				}
 			}
 			
-			if(errors == 0) {
-				break;
-			}
-			
 			iterations++;
-		}
+			
+		} while( errors != 0);
 		
 		calculateMargin();
 		
@@ -89,14 +79,9 @@ public class WidrowHoffLearner {
 		int trueNegatives = 0;
 		double totalLoss = 0.0;
 		for( int i = 0; i < dataSet.exData.length; i++ ) {
-			double[] heterogeneousInputs = dataSet.exData[i];
-			double[] inputs = new double[heterogeneousInputs.length + 1];
-			inputs[0] = -1;
-			for(int j = 1; j < inputs.length; j++) {
-				inputs[j] = heterogeneousInputs[j-1];
-			}
+			double[] heterogeneousInputs = VectorUtils.concat(new double[] { -1.0 }, dataSet.exData[i]);
 			
-			final double percepResult = percepW( inputs );
+			final double percepResult = percepW( heterogeneousInputs );
 			final double err = dataSet.exLabels[i] - percepResult; // use last value in array as label
 			
 			// 0 - correct
@@ -106,14 +91,14 @@ public class WidrowHoffLearner {
 				falseNegatives++;
 				System.out.println("False Negative Found: ");
 				System.out.println("Index: " + i);
-				System.out.println("Inputs: " + vectorToString(inputs));
-				totalLoss += Math.abs(-1.0 * err * VectorUtils.dotProduct(inputs, homogeneousWeights ));
+				System.out.println("Inputs: " + vectorToString(heterogeneousInputs));
+				totalLoss += Math.abs(-1.0 * err * VectorUtils.dotProduct(heterogeneousInputs, homogeneousWeights ));
 			} else if ( err < 0.0 ) {
 				falsePositives++;
 				System.out.println("False Positive Found: ");
 				System.out.println("Index: " + i);
-				System.out.println("Inputs: " + vectorToString(inputs));
-				totalLoss += Math.abs(-1.0 * err * VectorUtils.dotProduct(inputs, homogeneousWeights ));
+				System.out.println("Inputs: " + vectorToString(heterogeneousInputs));
+				totalLoss += Math.abs(-1.0 * err * VectorUtils.dotProduct(heterogeneousInputs, homogeneousWeights ));
 			} else {
 				if( percepResult == 1 ) {
 					truePositives++;
@@ -147,13 +132,8 @@ public class WidrowHoffLearner {
 	public List<Double> applyWeightVector(DataSet dataSet) {
 		List<Double> classifications = new ArrayList<Double>();
 		for( int i = 0; i < dataSet.exData.length; i++ ) {
-			double[] heterogeneousInputs = dataSet.exData[i];
-			double[] inputs = new double[heterogeneousInputs.length + 1];
-			inputs[0] = -1;
-			for(int j = 1; j < inputs.length; j++) {
-				inputs[j] = heterogeneousInputs[j-1];
-			}
-			double classification = percepW(inputs);
+			double[] heterogeneousInputs = VectorUtils.concat(new double[] { -1.0 }, dataSet.exData[i]);
+			double classification = percepW(heterogeneousInputs);
 			classifications.add(classification);
 		}
 		return classifications;
@@ -164,10 +144,10 @@ public class WidrowHoffLearner {
 		final double[] unitWeightVector = VectorUtils.unitVector(homogeneousWeights);
 		
 		for( int i = 0; i < x.length; i++ ) {
-			double[] inputs = x[i];
+			double[] heterogeneousInputs = VectorUtils.concat(new double[] { -1.0 }, x[i]);
 			
-			double dotProduct = Math.abs( VectorUtils.dotProduct(unitWeightVector, inputs) );
-			double norm = VectorUtils.norm(inputs);
+			double dotProduct = Math.abs( VectorUtils.dotProduct(unitWeightVector, heterogeneousInputs) );
+			double norm = VectorUtils.norm(heterogeneousInputs);
 			
 			double marginPart = dotProduct / norm;
 			

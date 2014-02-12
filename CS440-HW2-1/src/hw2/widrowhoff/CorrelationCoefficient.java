@@ -1,7 +1,6 @@
 package hw2.widrowhoff;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CorrelationCoefficient {
@@ -57,6 +56,7 @@ public class CorrelationCoefficient {
 		return transformed;
 	}
 	
+	@SuppressWarnings("unused")
 	private static double mean(final double[] array) {
 		double sum = 0.0;
 		for( int i = 0; i < array.length; i++ ) {

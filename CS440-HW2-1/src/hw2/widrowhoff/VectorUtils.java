@@ -40,6 +40,22 @@ public class VectorUtils {
 		return zippedVector;
 	}
 	
+	public static double[] concat( double[] left, double[] right) {
+		if( left == null || right == null ) {
+			throw new IllegalArgumentException("The left or right arguments must not be null");
+		}
+		
+		final int totalLength = left.length + right.length;
+		double[] concatted = new double[totalLength];
+		for(int i = 0; i < left.length; i++ ) {
+			concatted[i] = left[i];
+		}
+		for(int i = 0; i < right.length; i++ ) {
+			concatted[i + left.length] = right[i];
+		}
+		return concatted;
+	}
+	
 	public static double[] unitVector( double[] x ) {
 		double[] copy = x.clone();
 		double norm = norm(copy);
