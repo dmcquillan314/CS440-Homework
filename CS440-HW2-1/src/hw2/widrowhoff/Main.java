@@ -13,11 +13,13 @@ public class Main {
 		DataSet dataSet2 = new DataSet(dataSet2Csv);
 		DataSet dataSet3 = new DataSet(dataSet3Csv);
 		
-		WidrowHoffLearner learner = new WidrowHoffLearner( dataSet1, 0.0 );
+		WidrowHoffLearner learner = new WidrowHoffLearner( dataSet2, 0.0 );
 		learner.trainWeightVector();
 		
+		
+		
 		for( int i = 0; i < learner.getWeights().length; i++ ) {
-			System.out.println("\\( w_{" + (i+1) + "} \\rightarrow " + learner.getWeights()[i] + " \\)");
+			System.out.println("\\( w_{" + (i+1) + "} \\rightarrow " + learner.getWeights()[i] + " \\) \\\\");
 		}
 		
 		System.out.println("------------------------");
@@ -38,32 +40,6 @@ public class Main {
 			System.out.println( "\\( " + (i+1) + " \\rightarrow " + classifications.get(i) + " \\) \\\\" );
 		}
 		
-		final List<Pair<String,Double>> coefficients = CorrelationCoefficient.calculate(dataSet3, classifications);
-		System.out.println("------------------------");
-		System.out.println("Correlation Coefficients");
-		System.out.println("------------------------");
-		String maxProp = "";
-		Double maxCorrelation = Double.MIN_VALUE;
-		System.out.println("\\( \\begin{array}{l|l}");
-		System.out.println("\\bf{Label} & \\bf{Correlation Coefficient} \\\\");
-		System.out.println("\\hline");
-		for(final Pair<String, Double> coefficient : coefficients ) {
-			System.out.println("\\text{ " + coefficient.getLeft().trim().replaceAll("[^A-Za-z0-9]", " ") + " } & " + coefficient.getRight() + " \\\\");
-			if( coefficient.getRight().compareTo(maxCorrelation) > 0 ) {
-				maxProp = coefficient.getLeft();
-				maxCorrelation = coefficient.getRight();
-			}
-		}
-		System.out.println("\\end{array} \\)");
-		System.out.println();
-
-		
-		System.out.println("------------------------");
-		System.out.println("Maximum Correlation Prop");
-		System.out.println("------------------------");
-		System.out.println("\\bf{ Property With Maximum Correlation} \\\\ ");
-		System.out.println("Label: " + maxProp.replaceAll("[^A-Za-z0-9]", " ") + " \\\\");
-		System.out.println("Correlation Coefficient: \\(" + maxCorrelation + "\\)");
 	}
 
 }
