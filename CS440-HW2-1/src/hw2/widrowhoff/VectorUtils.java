@@ -70,10 +70,10 @@ public class VectorUtils {
 		return Math.sqrt(sum);
 	}
 	
-	public static String vectorToString( final double[] x ) {
+	public static String vectorToString( final double[] x, final int offset ) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("(");
-		for( int i = 1; i < x.length; i++ ) {
+		for( int i = 0 + offset; i < x.length; i++ ) {
 			stringBuilder.append(x[i]);
 			if( i != x.length - 1) {
 				stringBuilder.append(", ");
@@ -81,6 +81,10 @@ public class VectorUtils {
 		}
 		stringBuilder.append(")");
 		return stringBuilder.toString();
+	}
+	
+	public static String vectorToString( final double[] x ) {
+		return vectorToString(x, 0);
 	}
 	
 	public static double[] getListMax( final DataSet dataSet ) {

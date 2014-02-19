@@ -1,5 +1,8 @@
 package hw2.widrowhoff;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainP4 {
 	public static void main(String[] args) {
 		final String dataSet1Csv = "DataSet1.csv";
@@ -45,20 +48,58 @@ public class MainP4 {
 			System.out.println("\\( w_{" + (i+1) + "} \\rightarrow " + learner6.getWeights()[i] + " \\) \\\\");
 		}
 		
-	
+		
 		System.out.println("------------------------");
-		System.out.println("Data set 1 test");
+		System.out.println("Data set 1 test dataset 2");
+		System.out.println("------------------------");
+		learner2.testWeightVector( dataSet1 );
+		
+		System.out.println("------------------------");
+		System.out.println("Data set 1 test dataset 4");
 		System.out.println("------------------------");
 		learner4.testWeightVector( dataSet1 );
 		
 		System.out.println("------------------------");
-		System.out.println("Data set 1 test");
+		System.out.println("Data set 1 test dataset 5");
 		System.out.println("------------------------");
 		learner5.testWeightVector( dataSet1 );
 		
 		System.out.println("------------------------");
-		System.out.println("Data set 1 test");
+		System.out.println("Data set 1 test dataset 6");
 		System.out.println("------------------------");
 		learner6.testWeightVector( dataSet1 );
+		
+		double[] dataSet2UnitVector = VectorUtils.unitVector(VectorUtils.concat(new double[] { learner2.getThreshold() }, learner2.getWeights()));
+		double[] dataSet4UnitVector = VectorUtils.unitVector(VectorUtils.concat(new double[] { learner4.getThreshold() }, learner4.getWeights()));
+		double[] dataSet5UnitVector = VectorUtils.unitVector(VectorUtils.concat(new double[] { learner5.getThreshold() }, learner5.getWeights()));
+		double[] dataSet6UnitVector = VectorUtils.unitVector(VectorUtils.concat(new double[] { learner6.getThreshold() }, learner6.getWeights()));
+
+		List<double[]> vectors = new ArrayList<double[]>();
+		vectors.add(dataSet2UnitVector);
+		vectors.add(dataSet4UnitVector);
+		vectors.add(dataSet5UnitVector);
+		vectors.add(dataSet6UnitVector);
+		
+		System.out.println("------------------------");
+		System.out.println("Averaged Weight Vector");
+		System.out.println("------------------------");
+
+		double[] averagedUnitWeightVector = VectorUtils.averageVector(vectors);
+		for( int i = 0; i < averagedUnitWeightVector.length; i++ ) {
+			System.out.println("\\( w_{" + (i) + "} \\rightarrow " + averagedUnitWeightVector[i] + " \\) \\\\");
+		}
+		
+		double threshold = averagedUnitWeightVector[0];
+		double[] weight = new double[averagedUnitWeightVector.length - 1];
+		for( int i = 1; i < averagedUnitWeightVector.length; i++ ) {
+			weight[i - 1] = averagedUnitWeightVector[i];
+		}
+		
+		WidrowHoffLearner learner = new WidrowHoffLearner(dataSet1, weight, threshold);
+		System.out.println("------------------------");
+		System.out.println("Data set 1 test");
+		System.out.println("------------------------");
+		learner.testWeightVector(dataSet1);
+
 	}
 }

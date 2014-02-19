@@ -95,13 +95,13 @@ public class WidrowHoffLearner {
 				falseNegatives++;
 				System.out.println("False Negative Found: ");
 				System.out.println("\\textnormal{Index: } \\( " + i + " \\) \\\\");
-				System.out.println("\\textnormal{Inputs: } \\( " + VectorUtils.vectorToString(heterogeneousInputs) + " \\) \\\\" );
+				System.out.println("\\textnormal{Inputs: } \\( " + VectorUtils.vectorToString(heterogeneousInputs, 1) + " \\) \\\\" );
 				totalLoss += Math.abs(-1.0 * err * VectorUtils.dotProduct(heterogeneousInputs, homogeneousWeights ) / VectorUtils.norm(homogeneousWeights));
 			} else if ( err < 0.0 ) {
 				falsePositives++;
 				System.out.println("False Positive Found: ");
 				System.out.println("\\textnormal{Index: } \\( " + i + " \\) \\\\");
-				System.out.println("\\textnormal{Inputs: } \\( " + VectorUtils.vectorToString(heterogeneousInputs) + " \\) \\\\" );
+				System.out.println("\\textnormal{Inputs: } \\( " + VectorUtils.vectorToString(heterogeneousInputs, 1) + " \\) \\\\" );
 				totalLoss += Math.abs(-1.0 * err * VectorUtils.dotProduct(heterogeneousInputs, homogeneousWeights ) / VectorUtils.norm(homogeneousWeights));
 			} else {
 				if( percepResult == 1 ) {
