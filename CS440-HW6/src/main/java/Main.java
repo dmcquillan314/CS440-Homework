@@ -62,6 +62,27 @@ import weka.core.Instances;
 // common terms is lower using this method so that I could sort by the inverse document
 // frequency and remove the lowest values.
 
+// 2.2 The terms returned from 2.1 better described the group of which they belonged, 
+// whereas the terms from 1.1 we more so terms that were common across all the groups
+
+// TODO: finish this problem
+// 2.4 As an example, we can use the parameter p to guarantee that the IDF will never equal 0 but will
+// only approach it if we set p equal to 0 when a term is present in all the documents.
+
+// 2.5 Limitations of term frequency?
+// Term frequency does not marry up the term frequencies to the document set.  Instead it only compares the
+// counts in the current document.  Therefore it is limited to the scope of the current document.  It does not
+// take terms such as "Statue of Liberty" into considering when calculating term frequency and therefore the term
+// as a whole loses it's meaning.
+
+// Is tf-idf metric better than tf?
+// On the whole the tf-idf metrix still has most of the same limitations as the tf metric.  We do however gain the ability
+// to calculate the term frequency with the scope of the current document set.
+
+// 2.6 Limitations of tf-idf?
+// Two examples are that the order in which the terms appear in the document is not taken into consideration,
+// it assumes that terms are statistically independent.
+
 public class Main {
 
 	public static void main(String[] args) {
