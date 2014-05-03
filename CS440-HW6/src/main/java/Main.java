@@ -19,6 +19,19 @@ import weka.core.Instances;
 // We normalize in order to get a ratio of the terms to the document or term length.
 
 
+// 1.3 We normalize the counts of the terms so that we can gain a relative weighting of the
+// term to the current document.  
+
+// The advantage of the first equation is that no term should receive a normalized frequency of 1.0.  
+// The disadvantage of the first equation is that the term frequency of rare but important words
+// are assigned a very low value for their TF.
+
+// The advantage of the second equation is that you can easily identify words with a TF = 1.0
+// as a stopword in most cases.
+// The disadvantage of the second equation is that there's no way to discern which terms with
+// a term frequency of 1.0 should be labeled as a stopword or left alone because the term ended
+// up being important in the classification but yet not a common term.
+
 // 1.4 I'm assuming for this question it is referring to the -log(TF) since otherwise it
 // would always be negative.  This could be useful since relatively rare terms would 
 // have a higher term frequency due to the properties of the log(x) curve.  Also, as
@@ -69,7 +82,7 @@ public class Main {
 				
 				System.out.println("Class id: [" + key + "]");
 				
-				for( Integer index = statistics.getSortedCalculatedTermFrequencies().size() - 1; index > statistics.getSortedCalculatedTermFrequencies().size() - 5; index-- ) {
+				for( Integer index = statistics.getSortedCalculatedTermFrequencies().size() - 1; index > statistics.getSortedCalculatedTermFrequencies().size() - 6; index-- ) {
 					Pair<Integer,Double> pair = statistics.getSortedCalculatedTermFrequencies().get(index);
 					
 					Attribute attribute = instances.attribute(pair.getLeft());
@@ -86,7 +99,7 @@ public class Main {
 				
 				System.out.println("Class id: [" + key + "]");
 				
-				for( Integer index = statistics.getSortedNormalizedCalculatedTermFrequencies().size() - 1; index > statistics.getSortedNormalizedCalculatedTermFrequencies().size() - 5; index-- ) {
+				for( Integer index = statistics.getSortedNormalizedCalculatedTermFrequencies().size() - 1; index > statistics.getSortedNormalizedCalculatedTermFrequencies().size() - 6; index-- ) {
 					Pair<Integer,Double> normalizedPair = statistics.getSortedNormalizedCalculatedTermFrequencies().get(index);
 					
 					Attribute normalizedAttribute = instances.attribute(normalizedPair.getLeft());
@@ -109,7 +122,7 @@ public class Main {
 				Attribute attribute = instances.attribute( stat.getLeft() );
 				
 				if( stat.getRight().compareTo(5.0) < 0 ) {
-					System.out.println("Stop Word --> " + attribute.name().substring(1) + ": " + stat.getRight());
+//					System.out.println("Stop Word --> " + attribute.name().substring(1) + ": " + stat.getRight());
 				} else if( i < 10 ) {
 					System.out.println(attribute.name().substring(1) + ": " + stat.getRight());
 				}
@@ -123,7 +136,7 @@ public class Main {
 				
 				System.out.println("Class id: [" + key + "]");
 				
-				for( Integer index = termFrequencyStatistics.getSortedCalculatedIDFTermFrequencies().size() - 1; index > termFrequencyStatistics.getSortedCalculatedIDFTermFrequencies().size() - 5; index-- ) {
+				for( Integer index = termFrequencyStatistics.getSortedCalculatedIDFTermFrequencies().size() - 1; index > termFrequencyStatistics.getSortedCalculatedIDFTermFrequencies().size() - 6; index-- ) {
 					Pair<Integer,Double> pair = termFrequencyStatistics.getSortedCalculatedIDFTermFrequencies().get(index);
 					
 					Attribute attribute = instances.attribute(pair.getLeft());
