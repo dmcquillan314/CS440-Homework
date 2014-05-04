@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import com.hw6.document.classification.helpers.EvaluationHelper;
+import com.hw6.document.classification.helpers.InstancesFilterHelper;
 import com.hw6.document.classification.helpers.InstancesHelper;
 import com.hw6.document.classification.helpers.StopWordsHelper;
 import com.hw6.documentFrequency.InverseDocumentFrequencyService;
@@ -42,9 +43,14 @@ public class ClassifierRunner {
 			Integer maxStopWords = 1000;
 			
 			Stopwords stopwords = StopWordsHelper.findStopWords(trainingInstances, documentFrequencies.getStatistics(), threshold, maxStopWords);
-			trainingInstances = InstancesHelper.filterInstancesByStopwords( trainingInstances, stopwords );
-			testingInstances = InstancesHelper.filterInstancesByStopwords( testingInstances, stopwords );
-			applicationInstances = InstancesHelper.filterInstancesByStopwords( applicationInstances, stopwords );
+			trainingInstances = InstancesFilterHelper.filterInstancesByStopwords( trainingInstances, stopwords );
+			trainingInstances = InstancesFilterHelper.filterInstancesWithStemmer( trainingInstances );
+			
+			testingInstances = InstancesFilterHelper.filterInstancesByStopwords( testingInstances, stopwords );
+			testingInstances = InstancesFilterHelper.filterInstancesWithStemmer( testingInstances );
+			
+			applicationInstances = InstancesFilterHelper.filterInstancesByStopwords( applicationInstances, stopwords );
+			applicationInstances = InstancesFilterHelper.filterInstancesWithStemmer( applicationInstances );
 			
 			NaiveBayesMultinomial naiveBayesClassifier = new NaiveBayesMultinomial();
 			
@@ -59,7 +65,7 @@ public class ClassifierRunner {
 			internalOutput.setOutputDistribution(true);
 			
 			Evaluation evaluation = new Evaluation(trainingInstances);
-			evaluation.crossValidateModel(baggingClassifierWrapper, trainingInstances, 3, new Random( new Date().getTime() ), internalOutput );
+			evaluation.crossValidateModel(naiveBayesClassifier, trainingInstances, 3, new Random( new Date().getTime() ), internalOutput );
 			
 			EvaluationHelper.evaluateAndPrintResults(baggingClassifierWrapper, trainingInstances, trainingInstances);
 			EvaluationHelper.evaluateAndPrintResults(baggingClassifierWrapper, trainingInstances, testingInstances);
